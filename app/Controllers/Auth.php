@@ -90,12 +90,21 @@ class Auth extends BaseController
 
             helper('jwt');
 
+            $users = array(
+                'user_id' => $user['user_id'],
+                'email' => $user['email'],
+                'level' => $user['level'],
+                'nip' => $user['nip'],
+                'created_at' => $user['created_at'],
+                'updated_at' => $user['updated_at'],
+                'access_token' => getSignedJWTForUser($nip),
+            );
+
             return $this
                 ->getResponse(
                     [
                         'message' => 'User authenticated successfully',
-                        'user' => $user,
-                        'access_token' => getSignedJWTForUser($nip),
+                        'data' => $users,
                     ]
                 );
         } catch (Exception $exception) {
