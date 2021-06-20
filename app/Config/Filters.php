@@ -3,6 +3,7 @@
 namespace Config;
 
 use App\Filters\JWTAuthenticationFilter;
+use App\Filters\Options;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
@@ -21,6 +22,7 @@ class Filters extends BaseConfig
         'toolbar' => DebugToolbar::class,
         'honeypot' => Honeypot::class,
         'auth' => JWTAuthenticationFilter::class,
+        'options' => Options::class,
     ];
 
     /**
@@ -31,7 +33,7 @@ class Filters extends BaseConfig
      */
     public $globals = [
         'before' => [
-            //'honeypot'
+            'options',
             // 'csrf',
         ],
         'after' => [
