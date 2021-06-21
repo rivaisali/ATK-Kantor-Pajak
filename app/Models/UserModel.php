@@ -8,6 +8,7 @@ use Exception;
 class UserModel extends Model
 {
     protected $table = 'user';
+    protected $primaryKey = 'id';
     protected $allowedFields = [
         'nip',
         'nama_lengkap',
@@ -18,9 +19,11 @@ class UserModel extends Model
         'password',
         'foto',
         'level',
+        'last_logged',
     ];
+    protected $useTimestamps = true;
+    protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
-
     protected $beforeInsert = ['beforeInsert'];
     protected $beforeUpdate = ['beforeUpdate'];
 

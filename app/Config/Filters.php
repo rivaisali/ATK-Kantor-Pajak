@@ -68,6 +68,10 @@ class Filters extends BaseConfig
             'before' => [
                 'barang/*',
                 'barang',
+                'kategori/*',
+                'kategori',
+                'tipe/*',
+                'tipe',
             ],
         ],
     ];

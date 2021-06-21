@@ -52,10 +52,18 @@ if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
 
 $routes->get('barang', 'Barang::index');
 $routes->post('barang', 'Barang::create');
+$routes->post('barang/(:any)', 'Barang::update/$1');
 $routes->get('barang/(:any)', 'Barang::show/$1');
+$routes->delete('barang/(:any)', 'Barang::delete/$1');
 
-// $routes->get('client', 'Client::index');
-// $routes->post('client', 'Client::store');
-// $routes->get('client/(:num)', 'Client::show/$1');
-// $routes->post('client/(:num)', 'Client::update/$1');
-// $routes->delete('client/(:num)', 'Client::destroy/$1');
+$routes->get('kategori', 'Kategori::index');
+$routes->post('kategori', 'Kategori::create');
+$routes->post('kategori/(:any)', 'Kategori::update/$1');
+$routes->get('kategori/(:any)', 'Kategori::show/$1');
+$routes->delete('kategori/(:any)', 'Kategori::delete/$1');
+
+$routes->get('tipe', 'Tipe::index');
+$routes->post('tipe', 'Tipe::create');
+$routes->post('tipe/(:any)', 'Tipe::update/$1');
+$routes->get('tipe/(:any)', 'Tipe::show/$1');
+$routes->delete('tipe/(:any)', 'Tipe::delete/$1');

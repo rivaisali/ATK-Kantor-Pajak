@@ -2,12 +2,21 @@
 
 namespace App\Controllers;
 
+use App\Models\BarangModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
 
 class Barang extends BaseController
 {
+
+    protected $model;
+
+    public function __construct()
+    {
+        $this->model = new BarangModel();
+
+    }
     /**
      * Return an array of resource objects, themselves in array format
      *
@@ -15,10 +24,11 @@ class Barang extends BaseController
      */
     public function index()
     {
+
         return $this->getResponse(
             [
                 'message' => 'retrieved successfully',
-                'data' => $this->model->select_data("barang"),
+                'data' => $this->model->findAll(),
             ]
         );
 
@@ -33,32 +43,24 @@ class Barang extends BaseController
     {
         try {
 
-            $barang = $this->model->select_data("barang", "getRow", ["kode_barang" => $kode_barang]);
+            $barang = $this->model->findBarang('kode_barang', $kode_barang);
 
             return $this->getResponse(
                 [
                     'message' => 'retrieved successfully',
-                    'data' => $barang,
+                    'barang' => $barang,
                 ]
             );
 
         } catch (Exception $e) {
+
             return $this->getResponse(
                 [
-                    'message' => 'Could not find barang for specified ID',
+                    'message' => 'Could not find for specified ID',
                 ],
                 ResponseInterface::HTTP_NOT_FOUND
             );
         }
-
-    }
-
-    /**
-     * Return a new resource object, with default properties
-     *
-     * @return mixed
-     */
-    function new () {
 
     }
 
@@ -70,9 +72,13 @@ class Barang extends BaseController
     public function create()
     {
         $rules = [
+            'kode_barang' => 'required',
+            'barcode' => 'required',
             'nama_barang' => 'required',
-            // 'email' => 'required|min_length[6]|max_length[50]|valid_email|is_unique[client.email]',
-            // 'retainer_fee' => 'required|max_length[255]',
+            'kategori_id' => 'required',
+            'tipe_id' => 'required',
+            'merk' => 'required',
+            'stok' => 'required',
         ];
 
         $input = $this->getRequestInput($this->request);
@@ -85,11 +91,15 @@ class Barang extends BaseController
                 );
         }
 
-        $data = [
-            "nama_barang" => $input['nama_barang'],
-        ];
+        $kode_barang = $input['kode_barang'];
+        $barcode = $input['barcode'];
+        $nama_barang = $input['nama_barang'];
+        $kategori_id = $input['kategori_id'];
+        $tipe_id = $input['tipe_id'];
+        $merk = $input['merk'];
+        $stok = $input['stok'];
 
-        $data = $this->model->insert_data("barang", $data);
+        $data = $this->model->save($input);
 
         return $this->getResponse(
             [
@@ -101,23 +111,41 @@ class Barang extends BaseController
     }
 
     /**
-     * Return the editable properties of a resource object
-     *
-     * @return mixed
-     */
-    public function edit($id = null)
-    {
-        //
-    }
-
-    /**
      * Add or update a model resource, from "posted" properties
      *
      * @return mixed
      */
-    public function update($id = null)
+    public function update($kode_barang = null)
     {
-        //
+        try {
+
+            $this->model->findBarang('kode_barang', $kode_barang);
+
+            $input = $this->getRequestInput($this->request);
+
+            $this->model->where('kode_barang', $kode_barang)->set($input)->update();
+
+            $barang = $this->model->findBarang('kode_barang', $kode_barang);
+
+            return $this->getResponse(
+                [
+                    'message' => 'updated successfully',
+                    'status' => true,
+                    'data' => $barang,
+                ]
+            );
+
+        } catch (Exception $exception) {
+
+            return $this->getResponse(
+                [
+                    'message' => $exception->getMessage(),
+                    'status' => false,
+                ],
+                ResponseInterface::HTTP_NOT_FOUND
+            );
+        }
+
     }
 
     /**
@@ -125,8 +153,29 @@ class Barang extends BaseController
      *
      * @return mixed
      */
-    public function delete($id = null)
+    public function delete($kode_barang = null)
     {
-        //
+        try {
+
+            $barang = $this->model->findBarang('kode_barang', $kode_barang);
+
+            $this->model->delete($barang);
+
+            return $this
+                ->getResponse(
+                    [
+                        'message' => 'deleted successfully',
+                    ]
+                );
+
+        } catch (Exception $exception) {
+            return $this->getResponse(
+                [
+                    'message' => $exception->getMessage(),
+                ],
+                ResponseInterface::HTTP_NOT_FOUND
+            );
+        }
     }
+
 }

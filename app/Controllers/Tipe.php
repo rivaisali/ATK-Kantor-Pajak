@@ -2,19 +2,19 @@
 
 namespace App\Controllers;
 
-use App\Models\KategoriModel;
+use App\Models\TipeModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
 
-class Kategori extends BaseController
+class Tipe extends BaseController
 {
 
     protected $model;
 
     public function __construct()
     {
-        $this->model = new KategoriModel();
+        $this->model = new TipeModel();
 
     }
     /**
@@ -43,12 +43,12 @@ class Kategori extends BaseController
     {
         try {
 
-            $kategori = $this->model->findKategori($id);
+            $tipe = $this->model->findTipe($id);
 
             return $this->getResponse(
                 [
                     'message' => 'retrieved successfully',
-                    'kategori' => $kategori,
+                    'tipe' => $tipe,
                 ]
             );
 
@@ -72,7 +72,8 @@ class Kategori extends BaseController
     public function create()
     {
         $rules = [
-            'kategori' => 'required',
+            'kategori_id' => 'required',
+            'tipe' => 'required',
         ];
 
         $input = $this->getRequestInput($this->request);
@@ -85,8 +86,8 @@ class Kategori extends BaseController
                 );
         }
 
-        $kategori = $input['kategori'];
-        $keterangan = $input['keterangan'];
+        $kategori_id = $input['kategori_id'];
+        $tipe = $input['tipe'];
 
         $data = $this->model->save($input);
 
@@ -108,19 +109,19 @@ class Kategori extends BaseController
     {
         try {
 
-            $this->model->findKategori($id);
+            $this->model->findTipe($id);
 
             $input = $this->getRequestInput($this->request);
 
             $this->model->where('id', $id)->set($input)->update();
 
-            $kategori = $this->model->findKategori($id);
+            $tipe = $this->model->findTipe($id);
 
             return $this->getResponse(
                 [
                     'message' => 'updated successfully',
                     'status' => true,
-                    'data' => $kategori,
+                    'data' => $tipe,
                 ]
             );
 
@@ -146,9 +147,9 @@ class Kategori extends BaseController
     {
         try {
 
-            $kategori = $this->model->findKategori($id);
+            $tipe = $this->model->findTipe($id);
 
-            $this->model->delete($kategori);
+            $this->model->delete($tipe);
 
             return $this
                 ->getResponse(

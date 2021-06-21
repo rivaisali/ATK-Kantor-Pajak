@@ -91,7 +91,7 @@ class Auth extends BaseController
             helper('jwt');
 
             $users = array(
-                'user_id' => $user['user_id'],
+                'id' => $user['id'],
                 'email' => $user['email'],
                 'level' => $user['level'],
                 'nip' => $user['nip'],
@@ -100,6 +100,10 @@ class Auth extends BaseController
                 'access_token' => getSignedJWTForUser($nip),
             );
 
+            $model->update($user['id'], [
+                "last_logged" => date('y-m-d H:i:s'),
+            ]);
+
             return $this
                 ->getResponse(
                     [
@@ -107,6 +111,7 @@ class Auth extends BaseController
                         'data' => $users,
                     ]
                 );
+
         } catch (Exception $exception) {
             return $this
                 ->getResponse(
